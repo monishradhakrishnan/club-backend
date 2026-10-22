@@ -56,6 +56,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                
                 .csrf(csrf -> csrf.disable()) // stateless JWT API, no CSRF tokens needed
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -64,6 +65,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/api/budget/recommend").permitAll()
 
                         // admin only
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -73,11 +75,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/budget-requests/*/review").hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers("/api/attendance/sessions").hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers("/api/attendance/sessions/*/close").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/events").hasAnyRole("STAFF", "ADMIN")
 
                         // any authenticated user (students, staff, admin) - browsing clubs, applying, marking attendance
                         .requestMatchers("/api/clubs/**").authenticated()
                         .requestMatchers("/api/budget-requests/**").authenticated()
                         .requestMatchers("/api/attendance/**").authenticated()
+                        .requestMatchers("/api/events/**").authenticated()
                         .requestMatchers("/api/users/me").authenticated()
 
                         .anyRequest().authenticated()

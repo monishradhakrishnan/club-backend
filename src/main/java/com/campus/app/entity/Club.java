@@ -24,6 +24,10 @@ public class Club {
     @Column(length = 1000)
     private String description;
 
+    // Cap on how many students can register for this club
+    @Column(name = "max_students", nullable = false)
+    private Integer maxStudents;
+
     // The staff member who advises / administers this club
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coordinator_id", nullable = false)

@@ -1,13 +1,12 @@
 package com.campus.app.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
 public class VerifyOtpRequest {
-    @NotNull
-    private Long sessionId;
-    @NotBlank
+    @NotBlank(message = "OTP is required")
+    @Pattern(regexp = "\\d{4,10}", message = "OTP must be digits only")
     private String otp;
 }

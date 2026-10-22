@@ -9,4 +9,7 @@ public interface AttendanceRecordRepository extends JpaRepository<AttendanceReco
     List<AttendanceRecord> findBySessionId(Long sessionId);
     List<AttendanceRecord> findByStudentId(Long studentId);
     boolean existsBySessionIdAndStudentId(Long sessionId, Long studentId);
+    // A student's attendance records across all sessions of one specific club
+    // (property-path traversal: AttendanceRecord.session.club.id)
+    List<AttendanceRecord> findByStudentIdAndSession_ClubId(Long studentId, Long clubId);
 }

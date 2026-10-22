@@ -13,7 +13,7 @@ CREATE TABLE users (
     register_no VARCHAR(100) UNIQUE,
     role ENUM('ADMIN', 'STAFF', 'STUDENT') NOT NULL,
     department VARCHAR(255),
-    enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    enabled BOOLEAN NOT NULL DEFAULT FALSE,
     created_at DATETIME NOT NULL
 );
 

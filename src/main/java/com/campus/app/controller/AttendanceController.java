@@ -1,11 +1,13 @@
 package com.campus.app.controller;
 
+import com.campus.app.dto.AttendanceSummaryResponse;
 import com.campus.app.dto.GenerateOtpRequest;
 import com.campus.app.dto.VerifyOtpRequest;
 import com.campus.app.entity.AttendanceRecord;
 import com.campus.app.entity.AttendanceSession;
 import com.campus.app.security.UserPrincipal;
 import com.campus.app.service.AttendanceService;
+import com.campus.app.service.AttendanceSummaryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import java.util.List;
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
+    private final AttendanceSummaryService attendanceSummaryService;
 
     // Staff generates an OTP for a club meeting/session
     @PostMapping("/sessions")
@@ -51,8 +54,27 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.attendanceForSession(id));
     }
 
+    // Staff/admin only: this returns sessions including the live OTP,
+    // so students must never be able to call it.
     @GetMapping("/club/{clubId}/sessions")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public ResponseEntity<List<AttendanceSession>> sessions(@PathVariable Long clubId) {
         return ResponseEntity.ok(attendanceService.sessionsForClub(clubId));
+    }
+
+    // Student's own attendance history for one club
+    @GetMapping("/club/{clubId}/my")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<List<AttendanceRecord>> myAttendanceForClub(@PathVariable Long clubId,
+                                                                        @AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(attendanceService.myAttendanceForClub(principal.getId(), clubId));
+    }
+
+    // Student's attended / total sessions for one club, with a per-session list
+    @GetMapping("/club/{clubId}/summary")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<AttendanceSummaryResponse> mySummary(@PathVariable Long clubId,
+                                                                 @AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(attendanceSummaryService.summaryForStudent(principal.getId(), clubId));
     }
 }

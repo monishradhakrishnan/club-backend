@@ -23,7 +23,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public AuthResponse register(RegisterRequest req) {
+    public void register(RegisterRequest req) {
         if (userRepository.existsByEmail(req.getEmail())) {
             throw new ApiException("An account with this email already exists", HttpStatus.CONFLICT);
         }
@@ -40,12 +40,12 @@ public class AuthService {
                 .department(req.getDepartment())
                 .build();
 
-        user = userRepository.save(user);
-        return buildAuthResponse(user);
+        userRepository.save(user);
+        // no token issued here — account is enabled=false until an admin approves it
     }
 
     public AuthResponse login(LoginRequest req) {
-        // Throws BadCredentialsException (handled globally) on failure
+        // Throws BadCredentialsException / DisabledException (handled globally) on failure
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword()));
 
