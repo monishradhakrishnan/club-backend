@@ -75,3 +75,23 @@ CREATE TABLE attendance_records (
     FOREIGN KEY (session_id) REFERENCES attendance_sessions(id),
     FOREIGN KEY (student_id) REFERENCES users(id)
 );
+
+CREATE TABLE bills (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    uploaded_by BIGINT NOT NULL,
+    club_id BIGINT,
+    vendor VARCHAR(255),
+    bill_number VARCHAR(100),
+    bill_date DATE,
+    currency VARCHAR(10),
+    subtotal DECIMAL(12,2),
+    tax_amount DECIMAL(12,2),
+    total_amount DECIMAL(12,2) NOT NULL,
+    category VARCHAR(100),
+    file_name VARCHAR(255),
+    confidence DOUBLE,
+    items_json TEXT,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (uploaded_by) REFERENCES users(id),
+    FOREIGN KEY (club_id) REFERENCES clubs(id)
+);

@@ -82,6 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/budget-requests/**").authenticated()
                         .requestMatchers("/api/attendance/**").authenticated()
                         .requestMatchers("/api/events/**").authenticated()
+                        .requestMatchers("/api/bills/**").authenticated()
                         .requestMatchers("/api/users/me").authenticated()
 
                         .anyRequest().authenticated()

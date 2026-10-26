@@ -1,6 +1,7 @@
 package com.campus.app.controller;
 
 import com.campus.app.dto.BudgetRequestCreateDto;
+import com.campus.app.dto.BudgetRequestResponse;
 import com.campus.app.dto.BudgetReviewDto;
 import com.campus.app.entity.BudgetRequest;
 import com.campus.app.enums.Role;
@@ -49,6 +50,12 @@ public class BudgetRequestController {
             case ADMIN -> budgetRequestService.all();
         };
         return ResponseEntity.ok(result);
+    }
+
+    // Flat list for the Budget screen: student sees own, staff sees requests sent to them
+    @GetMapping("/inbox")
+    public ResponseEntity<List<BudgetRequestResponse>> inbox(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(budgetRequestService.inbox(principal.getUser()));
     }
 
     @GetMapping("/club/{clubId}")

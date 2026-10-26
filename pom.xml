@@ -78,6 +78,13 @@
          <artifactId>jackson-datatype-hibernate5-jakarta</artifactId> 
          </dependency> 
 
+        <!-- Excel export for the bills feature -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.5</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
